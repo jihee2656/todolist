@@ -3,7 +3,8 @@
     <header><h1>Vue Fire todo1</h1></header>
     <main>
       <div class="todos">
-        <div class="write">
+        <div class="write" v-if="writeState === 'add'">
+          <!-- 등록 -->
           <input
             ref="writeArea"
             type="text"
@@ -11,6 +12,16 @@
             @keyup.enter="addItem"
           />
           <button class="btn add" @click="addItem">Add</button>
+        </div>
+        <div class="write" v-else>
+          <!-- 수정 -->
+          <input
+            ref="writeArea"
+            type="text"
+            v-model="editItemText"
+            @keyup.enter="editSave"
+          />
+          <button class="btn add" @click="editSave">Save</button>
         </div>
         <ul class="list">
           <li v-for="(todo, i) in todos" :key="todo.text">
@@ -25,8 +36,8 @@
               {{ todo.text }}
               <!-- 원고 챕터1 마감 -->
               <b>
-                <a href="">Edit</a>
-                <a href="">Del</a>
+                <a href="" @click.prevent="editShow(i)">Edit</a>
+                <a href="" @click.prevent="del(i)">Del</a>
               </b>
             </span>
           </li>
@@ -37,12 +48,15 @@
 </template>
 
 <script>
-import { doesNotMatch } from "assert";
+// import { doesNotMatch } from "assert";
 
 export default {
   data() {
     return {
+      writeState: "add",
       addItemText: "",
+      editItemText: "",
+      crrEditItem: "",
       todos: [
         { text: "공부하기", state: "yet" },
         { text: "운동하기", state: "done" },
@@ -62,6 +76,18 @@ export default {
       } else {
         this.todos[index].state = "yet";
       }
+    },
+    editShow(index) {
+      this.crrEditItem = index;
+      this.writeState = "edit";
+      this.editItemText = this.todos[index].text;
+    },
+    editSave() {
+      this.todos[this.crrEditItem].text = this.editItemText;
+      this.writeState = "add";
+    },
+    del(index) {
+      this.todos.splice(index, 1);
     },
   },
   mounted() {
