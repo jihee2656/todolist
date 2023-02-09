@@ -8,15 +8,15 @@
           <button class="btn add" @click="addItem">Add</button>
         </div>
         <ul class="list">
-          <li v-for="hobby in todos" :key="hobby.text">
+          <li v-for="todo in todos" :key="todo.text">
             <i
               :class="[
-                { far: hobby.state === 'yet', fas: hobby.state === 'done' },
+                { far: todo.state === 'yet', fas: todo.state === 'done' },
                 'fa-check-square',
               ]"
             ></i>
             <span>
-              {{ hobby.text }}
+              {{ todo.text }}
               <!-- 원고 챕터1 마감 -->
               <b>
                 <a href="">Edit</a>
