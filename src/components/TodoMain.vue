@@ -4,12 +4,18 @@
     <main>
       <div class="todos">
         <div class="write">
-          <input type="text" v-model="addItemText" />
+          <input
+            ref="writeArea"
+            type="text"
+            v-model="addItemText"
+            @keyup.enter="addItem"
+          />
           <button class="btn add" @click="addItem">Add</button>
         </div>
         <ul class="list">
-          <li v-for="todo in todos" :key="todo.text">
+          <li v-for="(todo, i) in todos" :key="todo.text">
             <i
+              @click="checkItem(i)"
               :class="[
                 { far: todo.state === 'yet', fas: todo.state === 'done' },
                 'fa-check-square',
@@ -31,6 +37,8 @@
 </template>
 
 <script>
+import { doesNotMatch } from "assert";
+
 export default {
   data() {
     return {
@@ -44,9 +52,20 @@ export default {
   },
   methods: {
     addItem() {
+      if (!this.addITemText === "") return;
       this.todos.push({ text: this.addItemText, state: "yet" });
       this.addItemText = "";
     },
+    checkItem(index) {
+      if (this.todos[index].state === "yet") {
+        this.todos[index].state = "done";
+      } else {
+        this.todos[index].state = "yet";
+      }
+    },
+  },
+  mounted() {
+    this.$refs.writeArea.focus();
   },
 };
 </script>
